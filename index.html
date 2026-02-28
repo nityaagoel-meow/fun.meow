@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyOS — Academic Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<script src="script.js"></script>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">
+    <h1>StudyOS</h1>
+    <span>ACADEMIC COMMAND CENTER</span>
+  </div>
+  <nav class="nav">
+    <div class="nav-group">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" onclick="navigate('dashboard')">
+        <span class="nav-icon">⊞</span> Dashboard
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">DSA</div>
+      <div class="nav-item" onclick="navigate('dsa-log')">
+        <span class="nav-icon">⌨</span> Problem Log
+      </div>
+      <div class="nav-item" onclick="navigate('dsa-analytics')">
+        <span class="nav-icon">◈</span> Analytics
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Academics</div>
+      <div class="nav-item" onclick="navigate('syllabus')">
+        <span class="nav-icon">◉</span> Syllabus Tracker
+      </div>
+      <div class="nav-item" onclick="navigate('projects')">
+        <span class="nav-icon">◧</span> Projects & Milestones
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Productivity</div>
+      <div class="nav-item" onclick="navigate('pomodoro')">
+        <span class="nav-icon">◷</span> Pomodoro Timer
+      </div>
+      <div class="nav-item" onclick="navigate('goals')">
+        <span class="nav-icon">◎</span> Goals
+      </div>
+    </div>
+  </nav>
+  <div style="padding:16px; border-top:1px solid var(--border);">
+    <div style="font-size:10px; color:var(--text3); font-family:'JetBrains Mono',monospace; text-align:center;">All data stored locally</div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="badge streak" id="streak-badge">🔥 0 day streak</div>
+      <div class="badge" id="date-badge"></div>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page active" id="page-dashboard">
+      <div class="grid-4" id="dash-stats"></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Today's Plan</span>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-daily-goal')">+ Add Task</button>
+          </div>
+          <div id="today-tasks"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Upcoming Deadlines</span></div>
+          <div id="upcoming-deadlines"></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">DSA Activity (Last 30 days)</span></div>
+          <div class="heatmap" id="dash-heatmap"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Syllabus Progress</span></div>
+          <div id="dash-syllabus-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DSA LOG PAGE -->
+    <div class="page" id="page-dsa-log">
+      <div class="section-title">DSA Problem Log <small>Track every problem you solve</small></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <span class="card-title">Add Problem</span>
+        </div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label class="form-label">Platform</label>
+            <select class="form-select" id="dsa-platform">
+              <option>LeetCode</option><option>CodeChef</option><option>Codeforces</option>
+              <option>HackerRank</option><option>GeeksForGeeks</option><option>AtCoder</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Problem Name</label>
+            <input class="form-input" id="dsa-name" placeholder="e.g. Two Sum">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Topic</label>
+            <select class="form-select" id="dsa-topic">
+              <option>Array</option><option>String</option><option>Linked List</option><option>Tree</option>
+              <option>Graph</option><option>DP</option><option>Backtracking</option><option>Greedy</option>
+              <option>Binary Search</option><option>Stack</option><option>Queue</option><option>Heap</option>
+              <option>Hash Map</option><option>Two Pointer</option><option>Sliding Window</option>
+              <option>Recursion</option><option>Math</option><option>Bit Manipulation</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Difficulty</label>
+            <select class="form-select" id="dsa-difficulty">
+              <option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time Taken (min)</label>
+            <input class="form-input" id="dsa-time" type="number" placeholder="30">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input class="form-input" id="dsa-date" type="date">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="dsa-status">
+              <option>Solved</option><option>Attempted</option><option>Revisit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <input class="form-input" id="dsa-notes" placeholder="Optional notes...">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addDSAProblem()">Log Problem</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Problem History</span>
+          <div style="display:flex;gap:8px;">
+            <select class="form-select" id="filter-topic" style="width:130px;padding:5px 8px;font-size:11px;" onchange="renderDSATable()">
+              <option value="">All Topics</option>
+            </select>
+            <select class="form-select" id="filter-diff" style="width:110px;padding:5px 8px;font-size:11px;" onchange="renderDSATable()">
+              <option value="">All Levels</option>
+              <option>Easy</option><option>Medium</option><option>Hard</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr>
+            <th>Date</th><th>Platform</th><th>Problem</th><th>Topic</th><th>Difficulty</th><th>Time</th><th>Status</th><th>Notes</th><th></th>
+          </tr></thead>
+          <tbody id="dsa-table-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- DSA ANALYTICS PAGE -->
+    <div class="page" id="page-dsa-analytics">
+      <div class="section-title">DSA Analytics <small>Insights from your practice</small></div>
+      <div class="grid-4" id="analytics-stats"></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Difficulty Breakdown</span></div>
+          <div class="donut-wrap">
+            <canvas id="donut-difficulty" width="120" height="120"></canvas>
+            <div class="donut-legend" id="donut-diff-legend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Topic Distribution</span></div>
+          <div id="topic-bars"></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Activity Heatmap (365 days)</span></div>
+          <div class="heatmap" id="full-heatmap"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">⚠ Weak Topics (Need Practice)</span></div>
+          <div id="weak-topics"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Daily Problems (Last 14 days)</span></div>
+        <div class="bar-chart" id="daily-bar-chart" style="height:100px;"></div>
+      </div>
+    </div>
+
+    <!-- SYLLABUS PAGE -->
+    <div class="page" id="page-syllabus">
+      <div class="section-title">Semester Syllabus Tracker <small>Know what's done, what's left</small>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-subject')" style="margin-left:auto;">+ Add Subject</button>
+      </div>
+      <div id="syllabus-list"></div>
+    </div>
+
+    <!-- PROJECTS PAGE -->
+    <div class="page" id="page-projects">
+      <div class="section-title">Projects & Milestones <small>Timeline management</small>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-project')" style="margin-left:auto;">+ New Project</button>
+      </div>
+      <div id="projects-list"></div>
+    </div>
+
+    <!-- POMODORO PAGE -->
+    <div class="page" id="page-pomodoro">
+      <div class="section-title">Pomodoro Focus Timer <small>Sessions logged automatically</small></div>
+      <div class="grid-2">
+        <div class="card" style="text-align:center;">
+          <div class="pomo-ring">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="88" fill="none" stroke="var(--bg4)" stroke-width="8"/>
+              <circle id="pomo-progress-ring" cx="100" cy="100" r="88" fill="none" stroke="var(--accent)" stroke-width="8"
+                stroke-dasharray="553" stroke-dashoffset="553" stroke-linecap="round"/>
+            </svg>
+            <div class="pomo-ring-inner">
+              <div class="pomo-display" id="pomo-display">25:00</div>
+              <div class="pomo-phase" id="pomo-phase">FOCUS</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+            <button class="btn btn-ghost btn-sm" onclick="setPomoMode(25,'FOCUS')">25 min</button>
+            <button class="btn btn-ghost btn-sm" onclick="setPomoMode(5,'SHORT BREAK')">5 min</button>
+            <button class="btn btn-ghost btn-sm" onclick="setPomoMode(15,'LONG BREAK')">15 min</button>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
+            <button class="btn btn-primary" id="pomo-start-btn" onclick="togglePomo()">▶ Start</button>
+            <button class="btn btn-ghost" onclick="resetPomo()">↺ Reset</button>
+          </div>
+          <div>
+            <div class="form-group" style="text-align:left;">
+              <label class="form-label">Session Label</label>
+              <input class="form-input" id="pomo-label" placeholder="What are you working on?">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:center;margin-top:12px;">
+            <div style="text-align:center;">
+              <div style="font-family:'Fraunces',serif;font-size:24px;color:var(--accent);" id="pomo-count">0</div>
+              <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;">SESSIONS</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Fraunces',serif;font-size:24px;color:var(--green);" id="pomo-total-min">0</div>
+              <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;">MINUTES</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Session History</span></div>
+          <div id="pomo-history" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOALS PAGE -->
+    <div class="page" id="page-goals">
+      <div class="section-title">Goal Setting <small>Set targets & track progress</small>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-goal')" style="margin-left:auto;">+ New Goal</button>
+      </div>
+      <div id="goals-list"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- MODALS -->
+<!-- Daily Goal Task -->
+<div class="modal-overlay" id="modal-daily-goal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-daily-goal')">✕</button>
+    <div class="modal-title">Add Today's Task</div>
+    <div class="form-group"><label class="form-label">Task</label><input class="form-input" id="task-name" placeholder="e.g. Solve 3 DSA problems"></div>
+    <div class="form-group"><label class="form-label">Category</label>
+      <select class="form-select" id="task-cat">
+        <option>DSA</option><option>Syllabus</option><option>Project</option><option>Revision</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Priority</label>
+      <select class="form-select" id="task-priority">
+        <option>High</option><option>Medium</option><option>Low</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-daily-goal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Subject -->
+<div class="modal-overlay" id="modal-add-subject">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-subject')">✕</button>
+    <div class="modal-title">Add Subject</div>
+    <div class="form-group"><label class="form-label">Subject Name</label><input class="form-input" id="sub-name" placeholder="e.g. Data Structures"></div>
+    <div class="form-group"><label class="form-label">Total Units/Modules</label><input class="form-input" id="sub-units" type="number" placeholder="5" min="1"></div>
+    <div class="form-group"><label class="form-label">Exam Date</label><input class="form-input" id="sub-exam" type="date"></div>
+    <div class="form-group"><label class="form-label">Color</label>
+      <select class="form-select" id="sub-color">
+        <option value="var(--accent)">Purple</option><option value="var(--cyan)">Cyan</option>
+        <option value="var(--green)">Green</option><option value="var(--orange)">Orange</option>
+        <option value="var(--pink)">Pink</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-subject')">Cancel</button>
+      <button class="btn btn-primary" onclick="addSubject()">Add Subject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Unit Modal -->
+<div class="modal-overlay" id="modal-add-unit">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-unit')">✕</button>
+    <div class="modal-title">Add Unit/Module</div>
+    <input type="hidden" id="unit-sub-id">
+    <div class="form-group"><label class="form-label">Unit Name</label><input class="form-input" id="unit-name" placeholder="e.g. Unit 1: Arrays & Strings"></div>
+    <div class="form-group"><label class="form-label">Topics (comma separated)</label><textarea class="form-textarea" id="unit-topics" placeholder="Arrays, Strings, 2D Arrays..."></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-unit')">Cancel</button>
+      <button class="btn btn-primary" onclick="addUnit()">Add Unit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Project -->
+<div class="modal-overlay" id="modal-add-project">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-project')">✕</button>
+    <div class="modal-title">Create Project</div>
+    <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="proj-name" placeholder="e.g. E-Commerce App"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="proj-desc" placeholder="Brief description..."></textarea></div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" id="proj-start" type="date"></div>
+      <div class="form-group"><label class="form-label">End Date</label><input class="form-input" id="proj-end" type="date"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-project')">Cancel</button>
+      <button class="btn btn-primary" onclick="addProject()">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Milestone -->
+<div class="modal-overlay" id="modal-add-milestone">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-milestone')">✕</button>
+    <div class="modal-title">Add Milestone</div>
+    <input type="hidden" id="ms-proj-id">
+    <div class="form-group"><label class="form-label">Milestone Name</label><input class="form-input" id="ms-name" placeholder="e.g. MVP Complete"></div>
+    <div class="form-group"><label class="form-label">Deadline</label><input class="form-input" id="ms-deadline" type="date"></div>
+    <div class="form-group"><label class="form-label">Blockers</label><textarea class="form-textarea" id="ms-blockers" placeholder="Any blockers or dependencies..."></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-milestone')">Cancel</button>
+      <button class="btn btn-primary" onclick="addMilestone()">Add Milestone</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Goal -->
+<div class="modal-overlay" id="modal-add-goal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-goal')">✕</button>
+    <div class="modal-title">Set a Goal</div>
+    <div class="form-group"><label class="form-label">Goal Title</label><input class="form-input" id="goal-title" placeholder="e.g. Solve 100 LeetCode problems"></div>
+    <div class="form-group"><label class="form-label">Type</label>
+      <select class="form-select" id="goal-type">
+        <option value="dsa">DSA Problems</option><option value="study">Study Hours</option>
+        <option value="pomodoro">Pomodoro Sessions</option><option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">Target Number</label><input class="form-input" id="goal-target" type="number" placeholder="100"></div>
+      <div class="form-group"><label class="form-label">Deadline</label><input class="form-input" id="goal-deadline" type="date"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-goal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addGoal()">Set Goal</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
